@@ -1,5 +1,6 @@
 package view;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
@@ -7,12 +8,17 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
+import javax.swing.ImageIcon;
 
 public class CalendarPanel extends CenterPanel{
 	private static final long serialVersionUID = 1L;
 	public JTable[] table;
 	public DefaultTableModel[] model;
 	public JPanel grid;
+	public JLabel targetDate;
+	public JButton btn_prev, btn_next;
 	JButton[] button = new JButton[42];
 	
 	public CalendarPanel(){
@@ -58,6 +64,22 @@ public class CalendarPanel extends CenterPanel{
 		}
 	
 		add(grid);
+		
+		targetDate = new JLabel("이번 달");
+		targetDate.setFont(new Font("D2", Font.BOLD, 15));
+		targetDate.setHorizontalAlignment(SwingConstants.CENTER);
+		targetDate.setBounds(399, 12, 179, 29);
+		add(targetDate);
+		
+		btn_prev = new JButton("");
+		btn_prev.setIcon(new ImageIcon("C:\\Users\\whcks\\Desktop\\eclipse\\workspace\\Qqqq\\src\\images\\leftArrow.png"));
+		btn_prev.setBounds(305, 12, 80, 27);
+		add(btn_prev);
+		
+		btn_next = new JButton("");
+		btn_next.setIcon(new ImageIcon("C:\\Users\\whcks\\Desktop\\eclipse\\workspace\\Qqqq\\src\\images\\rightArrow.png"));
+		btn_next.setBounds(601, 12, 80, 27);
+		add(btn_next);
 	}
 
 	@Override
