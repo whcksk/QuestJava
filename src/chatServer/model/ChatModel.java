@@ -7,10 +7,11 @@ import java.util.HashMap;
 import java.util.Queue;
 
 public class ChatModel {
+	public static int port = 8000;
+	
 	public ArrayList<ServerSocket> serverSockets = new ArrayList<ServerSocket>();
 	public ArrayList<Socket> sockets = new ArrayList<Socket>();
 	
-	public HashMap<Integer, ArrayList<Integer>> recv_send =  new HashMap<Integer, ArrayList<Integer>>();// receiverId : senderId
-	public HashMap<Userkey, Queue<String>> recvMsg = new HashMap<Userkey, Queue<String>>();	//rcvsndKey : oldMsg
+	public HashMap<Integer, HashMap<Integer, Queue<String>>> recv_send =  new HashMap<Integer, HashMap<Integer,Queue<String>>>();// receiverId : senderId : message
 }
 

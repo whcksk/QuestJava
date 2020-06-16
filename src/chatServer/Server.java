@@ -7,27 +7,36 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server {
+import chatServer.control.ChatController;
+import chatServer.model.ChatModel;
+
+public class Server{
+	ChatModel model;
+	ChatController control;
 
 	public static void main(String[] args) {
-		System.out.println("server start");
+		System.out.println("server");
 		new Server().run();
 	}
 
+	public Server() {
+		model = new ChatModel();
+		control = new ChatController(model);
+	}
+
 	public void run() {
+
 		while (true) {
 			ServerSocket serverSocket = null;
 			try {
-				serverSocket = new ServerSocket(port++);
-				serverSockets.add(serverSocket);
+				serverSocket = control.makeServerSocket();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 			try {
 				Socket socket = serverSocket.accept();
-				sockets.add(socket);
-				new ChattingServer(socket).start();
+				model.sockets.add(socket);
+				new ChattingServer(model, control, socket).start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -40,9 +49,13 @@ public class Server {
 }
 
 class ChattingServer extends Thread {
+	ChatController control;
+	ChatModel model;
 	Socket socket;
 
-	ChattingServer(Socket socket) {
+	ChattingServer(ChatModel model, ChatController control, Socket socket) {
+		this.model = model;
+		this.control = control;
 		this.socket = socket;
 	}
 
@@ -55,17 +68,17 @@ class ChattingServer extends Thread {
 			String id = inputdata.readUTF();
 			Socket receiver = null;
 			try {
-				receiver = Server.sockets.get(Integer.parseInt(id));
+				receiver = model.sockets.get(Integer.parseInt(id));
 			} catch (Exception e) {
 				System.out.println("해당 아이디없");
 			}
-			
+
 			if (receiver != null) {
 				outputdata = new DataOutputStream(receiver.getOutputStream());
 
 				for (int i = 0; i < Server.oldMsg.size(); i++) {
 					outputdata.writeUTF(Server.oldMsg.remove(i));
-				}
+				}z
 			}
 
 			while (true) {
