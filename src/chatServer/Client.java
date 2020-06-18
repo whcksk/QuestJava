@@ -4,90 +4,74 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Client {
+class Client {
 	public static void main(String[] args) {
-		System.out.println("client");
-		new Client().run();
-	}
-
-	public void run() {
+		String user = "2";
+		Socket socket;
 		try {
-			Socket client = new Socket("127.0.0.1", 524);
-			new ChattingClient(client).run();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			socket = new Socket("127.0.0.1", 8080);
+			System.out.println("클라이언트 시작");
+			new ClientSender(socket, user).start();
+			new ClientReceiver(socket).start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 }
 
-class ChattingClient {
+class ClientSender extends Thread {
 	Socket socket;
+	String user;
+	DataOutputStream out;
 
-	ChattingClient(Socket socket) {
+	public ClientSender(Socket socket, String user) {
+		super();
 		this.socket = socket;
-	}
-
-	public void run() {
-		new ChattingClientSend(socket).start();
-		new ChattingClientReiv(socket).start();
-	}
-}
-
-class ChattingClientSend extends Thread {
-	Socket socket;
-
-	public ChattingClientSend(Socket socket) {
-		this.socket = socket;
-	}
-
-	@Override
-	public void run() {
-		DataOutputStream outputdata;
+		this.user = user;
 		try {
-			outputdata = new DataOutputStream(socket.getOutputStream());
-			Scanner sc = new Scanner(System.in);
-			outputdata.writeUTF("0");
-			while(true) {
-				String message = sc.nextLine();
-				outputdata.writeUTF(message);
-			}
+			out = new DataOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-	}
-}
-
-class ChattingClientReiv extends Thread {
-	Socket socket;
-
-	public ChattingClientReiv(Socket socket) {
-		this.socket = socket;
 	}
 
-	@Override
 	public void run() {
-		DataInputStream inputdata;
+		Scanner sc = new Scanner(System.in);
 		try {
-			inputdata = new DataInputStream(socket.getInputStream());
+			out.writeUTF(user);
 			while (true) {
-				try {
-					String message = inputdata.readUTF();
-					System.out.println(message);
-				} catch (IOException e) {
-					e.printStackTrace();
-					break;
-				} catch (Exception e) {
-					break;
-				}
+				out.writeUTF(sc.next());
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
+		}
+	}
+}
+
+class ClientReceiver extends Thread {
+	Socket socket;
+	DataInputStream in;
+
+	public ClientReceiver(Socket socket) {
+		this.socket = socket;
+		try {
+			in = new DataInputStream(socket.getInputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		while (in != null) {
+			try {
+				System.out.println(in.readUTF());
+			} catch (Exception e) {
+				e.printStackTrace();
+				break;
+			}
 		}
 	}
 }

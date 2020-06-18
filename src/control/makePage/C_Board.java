@@ -43,7 +43,7 @@ public class C_Board extends C_Panel{
 				new C_Writing(view, control).set((WritingPanel) newpanel);
 			}
 		});
-
+		
 		panel.back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
