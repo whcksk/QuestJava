@@ -1,14 +1,11 @@
 package chatServer.control;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import chatServer.Server;
 import chatServer.model.ChatModel;
 
 public class ChatController {

@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		center = new JPanel();
 		center.setSize(CENTEREWidth, CENTERHeight);
 		center.setLayout(null);

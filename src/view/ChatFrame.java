@@ -1,4 +1,4 @@
-package chatServer.view;
+package view;
 
 import java.awt.Color;
 
@@ -13,18 +13,18 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class ChatView extends JFrame{
+public class ChatFrame extends JFrame{
 	public JTextField msg;
 	public JLabel time;
 	public JButton send, close;
 	public JScrollPane scroll;
 	public JTable chat;
 	public DefaultTableModel model;
-	public ChatView() {
+	public ChatFrame() {
 		setSize(515, 400);
 		getContentPane().setBackground(new Color(255, 255, 255));
 		getContentPane().setLayout(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(105, 105, 105));
@@ -91,6 +91,9 @@ public class ChatView extends JFrame{
 	}
 	public void createGui() {
 		setVisible(true);
+	}
+	public static void main(String[] args) {
+		new ChatFrame().createGui();
 	}
 }
 
