@@ -63,6 +63,10 @@ public class C_Userpage extends C_Panel{
 			} 
 		});
 		
+		if(control.me.getId().equals(user.getId())) {
+			panel.chat.setVisible(false);
+		}
+		
 		panel.chat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
