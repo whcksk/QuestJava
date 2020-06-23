@@ -6,9 +6,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import control.Controller;
+import control.chatClient.Client;
 import model.Comment;
 import model.Post;
 import model.User;
+import view.ChatFrame;
 import view.MainFrame;
 import view.PostPanel;
 import view.UserpagePanel;
@@ -58,11 +60,19 @@ public class C_Userpage extends C_Panel{
 					PostPanel newpanel = (PostPanel) view.change("post");
 					new C_Post(view, control).set(newpanel, control.getPost(postId));
 				}
+			} 
+		});
+		
+		panel.chat.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChatFrame chatframe = new ChatFrame();
+				chatframe.createGui();
+				new C_ChatFrame(chatframe, control.me.getId(), user.getId()).set(chatframe, control);
 			}
 		});
 		
 		panel.back.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				goback();

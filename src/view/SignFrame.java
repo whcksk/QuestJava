@@ -15,6 +15,7 @@ public class SignFrame extends JFrame{
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setVisible(true);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	public void change(String log) {
 		if(log == "signin") {

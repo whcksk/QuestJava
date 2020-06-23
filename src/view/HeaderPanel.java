@@ -54,8 +54,8 @@ public class HeaderPanel extends JPanel{
 		calendar.setIcon(new ImageIcon("C:/Users/whcks/Desktop/eclipse/workspace/Qqqq/src/calendar.jpg"));
 		calendar.setBounds(725, 10, 50, 50);
 		add(calendar);
-		
 	}
+	
 	public void turnAuthView(String id) {
 		if(Controller.IsAuth()) {
 			mypage.setVisible(true);

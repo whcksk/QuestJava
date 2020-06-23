@@ -84,6 +84,6 @@ public class CalendarPanel extends CenterPanel{
 
 	@Override
 	public void turnAuthView(String id) {
-		
+		repaint();
 	}
 }

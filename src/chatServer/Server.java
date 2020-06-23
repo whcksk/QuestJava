@@ -5,45 +5,28 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.net.SocketException;
 
 import chatServer.control.ChatController;
 import chatServer.model.ChatModel;
 
-public class Server{
-	ChatModel model;
-	ChatController control;
+public class Server {
 
 	public static void main(String[] args) {
-		System.out.println("server");
-		new Server().run();
-	}
-
-	public Server() {
-		model = new ChatModel();
-		control = new ChatController(model);
-	}
-
-	public void run() {
-
-		while (true) {
-			ServerSocket serverSocket = null;
-			try {
-				serverSocket = control.makeServerSocket();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
+		ChatModel model = new ChatModel();
+		ChatController control = new ChatController(model);
+		ServerSocket serverSocket;
+		
+		try {
+			serverSocket = new ServerSocket(8080);
+			System.out.println("서버 시작");
+			while (true) {
 				Socket socket = serverSocket.accept();
-				model.sockets.add(socket);
-				new ChattingServer(model, control, socket).start();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("Server end");
-				break;
+				System.out.println("■ [SERVER] " + socket.getInetAddress() + " : " + socket.getPort() + "클라 접속");
+				new ChattingServer(socket, model, control).start();
 			}
+		} catch (IOException e) { 
+			e.printStackTrace();
 		}
 	}
 }
@@ -52,56 +35,62 @@ class ChattingServer extends Thread {
 	ChatController control;
 	ChatModel model;
 	Socket socket;
+	DataInputStream in;
+	DataOutputStream out;
 
-	ChattingServer(ChatModel model, ChatController control, Socket socket) {
+	ChattingServer(Socket socket, ChatModel model, ChatController control) {
+		this.socket = socket;
 		this.model = model;
 		this.control = control;
-		this.socket = socket;
+		try {
+			// 접속 유저의 in/out 스트림 생성
+			out = new DataOutputStream(socket.getOutputStream());
+			in = new DataInputStream(socket.getInputStream());
+		} catch (Exception e) {}
 	}
 
 	@Override
 	public void run() {
-		DataInputStream inputdata;
-		DataOutputStream outputdata;
 		try {
-			inputdata = new DataInputStream(socket.getInputStream());
-			String id = inputdata.readUTF();
-			Socket receiver = null;
-			try {
-				receiver = model.sockets.get(Integer.parseInt(id));
-			} catch (Exception e) {
-				System.out.println("해당 아이디없");
-			}
-
-			if (receiver != null) {
-				outputdata = new DataOutputStream(receiver.getOutputStream());
-
-				for (int i = 0; i < Server.oldMsg.size(); i++) {
-					outputdata.writeUTF(Server.oldMsg.remove(i));
-				}z
-			}
-
-			while (true) {
-				try {
-					receiver = Server.sockets.get(Integer.parseInt(id));
-					String message = inputdata.readUTF();
-					System.out.println(message);
-
-					if (receiver == null) {
-						Server.oldMsg.add(message);
-					} else {
-						outputdata = new DataOutputStream(receiver.getOutputStream());
-						outputdata.writeUTF(message);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-					break;
-				} catch (Exception e) {
-					break;
+			// 일단 쌓인 메시지데이터들 다 보내주자.
+			// 첫번째로 받는 것은 userid
+			String id = in.readUTF();
+			String opp = in.readUTF();
+			
+			// 서버에 접속신고 해줘야지
+			model.socket.put(id, socket);
+			
+			System.out.println(id + "님이 접속했습니다.");
+			// 여긴 서버인디. 이걸 클라에게 보내줘야 함
+			String[] msg = control.recvMsg(id, opp);
+			if(msg != null) {
+				for (int i = 0; i < msg.length; i++) {
+					out.writeUTF(opp + ":  " + msg[i]);
 				}
 			}
-
+			
+			// 채팅 시작.  중간자역할
+			// 상대방에게 보내는 out 스트림 생성
+			while (true) {
+				Socket otherSocket = null;
+				DataOutputStream otherOut = null;
+				String message = in.readUTF();
+				System.out.println("server check : " + message);
+				// 접속중이 아니라면
+				if(control.getSocket(opp) == null) {
+					System.out.println("접속중 아니다");
+					control.saveMsg(opp, id, message);
+				} else {
+					//접속중이면 스트림 생성
+					System.out.println("접속중이다");
+					otherSocket = control.getSocket(opp);
+					otherOut = new DataOutputStream(otherSocket.getOutputStream());
+					
+					otherOut.writeUTF(message);
+				}
+			}
+		} catch (SocketException e1) {
+			System.out.println("접속 종료");
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
