@@ -8,6 +8,7 @@ import java.util.Scanner;
 import view.ChatFrame;
 
 public class ClientSender {
+
 	ChatFrame view;
 	Socket socket;
 	String me;
@@ -45,7 +46,7 @@ public class ClientSender {
 			message = me + ": " + message;
 			String msgtoSever = message;
 			out.writeUTF(msgtoSever);
-			
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

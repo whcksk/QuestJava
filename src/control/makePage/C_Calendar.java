@@ -1,8 +1,9 @@
 package control.makePage;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.JTable;
@@ -13,18 +14,18 @@ import view.CalendarPanel;
 import view.MainFrame;
 import view.PostPanel;
 
-public class C_Calendar extends C_Panel{
+public class C_Calendar extends C_Panel {
 	private int nowYear, nowMonth;
 	private String[] day = { "일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일" };
 	private int[] dateNum = { 31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-	
+
 	C_Calendar(MainFrame view, Controller control) {
 		super(view, control);
 		Calendar cal = Calendar.getInstance();
 		nowYear = cal.get(Calendar.YEAR);
 		nowMonth = cal.get(Calendar.MONTH) + 1;
 	}
-	
+
 	public void set(CalendarPanel panel) {
 		getMonthCal(panel, control);
 		for (int i = 0; i < panel.table.length; i++) {
@@ -32,15 +33,19 @@ public class C_Calendar extends C_Panel{
 				@Override
 				public void mouseReleased(MouseEvent e) {
 				}
+
 				@Override
 				public void mousePressed(MouseEvent e) {
 				}
+
 				@Override
 				public void mouseExited(MouseEvent e) {
 				}
+
 				@Override
 				public void mouseEntered(MouseEvent e) {
 				}
+
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					JTable table = (JTable) e.getSource();
@@ -48,14 +53,27 @@ public class C_Calendar extends C_Panel{
 					int row = table.rowAtPoint(e.getPoint());
 					String date = nowYear + "." + nowMonth + "." + table.getColumnModel().getColumn(0).getHeaderValue();
 					Post[] posts = control.getPosts(date);
-					
+
 					PostPanel panel = (PostPanel) view.change("post");
 					new C_Post(view, control).set(panel, posts[posts.length - 1 - row]);
 				}
 			});
 		}
+
+		panel.btn_next.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getNxtMon(panel, control);
+			}
+		});
+		panel.btn_prev.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				getPreMon(panel, control);
+			}
+		});
 	}
-	
+
 	public int getNowYear() {
 		return nowYear;
 	}
@@ -71,14 +89,17 @@ public class C_Calendar extends C_Panel{
 
 	public void getMonthCal(CalendarPanel panel, int year, int month, Controller control) {
 		int thisMon = fromDate(year, month, 1) % 7;
-
+		
+		panel.targetDate.setText(year + " 년 " + month + " 월");
+		
 		// 이전달 날짜
 		int i = 0;
 		for (int j = dateNum[month - 1] - thisMon + 1; i < thisMon; i++, j++) {
+			panel.model[i].setNumRows(0);
 			panel.table[i].getColumnModel().getColumn(0).setHeaderValue(j);
-			//포스트 불러오기
+			// 포스트 불러오기
 			int month2, year2 = year;
-			if(month == 1) {
+			if (month == 1) {
 				month2 = 12;
 				year2 = year - 1;
 			} else {
@@ -86,22 +107,23 @@ public class C_Calendar extends C_Panel{
 			}
 			String date = year2 + "." + month2 + "." + j;
 			Post[] posts = control.getPosts(date);
-			if(posts != null)
+			if (posts != null)
 				for (int j2 = posts.length - 1; j2 >= 0; j2--) {
-					Object[] data = {posts[j2].getTitle()};
+					Object[] data = { posts[j2].getTitle() };
 					panel.model[i].addRow(data);
 				}
 		}
 
 		// 이번달 날짜
 		for (int j = 1; i < thisMon + dateNum[month]; i++, j++) {
+			panel.model[i].setNumRows(0);
 			panel.table[i].getColumnModel().getColumn(0).setHeaderValue(j);
-			//포스트 불러오기
+			// 포스트 불러오기
 			String date = year + "." + month + "." + j;
 			Post[] posts = control.getPosts(date);
-			if(posts != null) {
+			if (posts != null) {
 				for (int j2 = posts.length - 1; j2 >= 0; j2--) {
-					Object[] data = {posts[j2].getTitle()};
+					Object[] data = { posts[j2].getTitle() };
 					panel.model[i].addRow(data);
 				}
 			}
@@ -109,10 +131,11 @@ public class C_Calendar extends C_Panel{
 
 		// 다음달 날짜
 		for (int j = 1; i < panel.model.length; i++, j++) {
+			panel.model[i].setNumRows(0);
 			panel.table[i].getColumnModel().getColumn(0).setHeaderValue(j);
-			//포스트 불러오기
+			// 포스트 불러오기
 			int month2, year2 = year;
-			if(month == 12) {
+			if (month == 12) {
 				month2 = 1;
 				year2 = year + 1;
 			} else {
@@ -120,13 +143,14 @@ public class C_Calendar extends C_Panel{
 			}
 			String date = year2 + "." + month2 + "." + j;
 			Post[] posts = control.getPosts(date);
-			if(posts != null) {
+			if (posts != null) {
 				for (int j2 = posts.length - 1; j2 >= 0; j2--) {
-					Object[] data = {posts[j2].getTitle()};
+					Object[] data = { posts[j2].getTitle() };
 					panel.model[i].addRow(data);
 				}
 			}
 		}
+		
 	}
 
 	// 다음달 달력 가져오기

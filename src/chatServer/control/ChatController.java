@@ -15,13 +15,17 @@ public class ChatController {
 		this.model = model;
 	}
 	
+
 	public void addSocket(String id, Socket socket) {
+
 		model.socket.put(id, socket);
 	}
 	
 	//getSocket으로 null이면 현재 접속해 있지 않다는 얘기
 	//메시지 쌓아줘야한다. (saveMsg)
+
 	public Socket getSocket(String id) {
+
 		if(!model.socket.containsKey(id)) {
 			return null;
 		}
@@ -29,11 +33,13 @@ public class ChatController {
 	}
 	
 	
+
 	public String[] recvId(String receiver) {
 		String[] senders;
 		if (model.recv_send.containsKey(receiver)) {
 			senders = new String[model.recv_send.size()];
 			Iterator<String> iter = model.recv_send.get(receiver).keySet().iterator();
+
 			for (int i = 0; iter.hasNext(); i++) {
 				senders[i] = iter.next();
 			}
@@ -43,6 +49,7 @@ public class ChatController {
 	}
 
 	// 접속 후 보낸이에게 쌓인 메시지 받기
+
 	public String[] recvMsg(String receiver, String sender) {
 		try {
 			Queue<String> queue = model.recv_send.get(receiver).get(sender);

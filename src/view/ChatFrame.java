@@ -22,9 +22,10 @@ public class ChatFrame extends JFrame{
 	public DefaultTableModel model;
 	public ChatFrame() {
 		setSize(515, 400);
+
 		setResizable(false);
 		setLocationRelativeTo(null);
-		
+
 		getContentPane().setBackground(new Color(255, 255, 255));
 		getContentPane().setLayout(null);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);

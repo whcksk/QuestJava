@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 import control.Controller;
+
 import control.chatClient.Client;
 import view.ChatFrame;
 
@@ -22,6 +23,7 @@ public class C_ChatFrame {
 		view.send.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				client.sender.run();
 			}
 		});
@@ -29,6 +31,7 @@ public class C_ChatFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				view.dispose();
+
 			}
 		});
 		

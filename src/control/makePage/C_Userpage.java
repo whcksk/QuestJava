@@ -62,13 +62,15 @@ public class C_Userpage extends C_Panel{
 				}
 			} 
 		});
-		
+
 		panel.chat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ChatFrame chatframe = new ChatFrame();
 				chatframe.createGui();
+
 				new C_ChatFrame(chatframe, control.me.getId(), user.getId()).set(chatframe, control);
+
 			}
 		});
 		

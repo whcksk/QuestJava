@@ -2,6 +2,7 @@ package view;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -33,7 +34,13 @@ public class CalendarPanel extends CenterPanel{
 		divide.setBounds(12, 45, 970, 4);
 		add(divide);
 		
-		grid = new JPanel(new GridBagLayout());
+		targetDate = new JLabel("이번 달");
+		targetDate.setFont(new Font("D2", Font.BOLD, 15));
+		targetDate.setHorizontalAlignment(SwingConstants.CENTER);
+		targetDate.setBounds(399, 12, 179, 27);
+		add(targetDate);
+		
+		grid = new JPanel(new GridLayout(6,7));
 		grid.setBounds(12, 57, 970, 624);
 		grid.setBackground(Color.WHITE);
 		
@@ -64,12 +71,6 @@ public class CalendarPanel extends CenterPanel{
 		}
 	
 		add(grid);
-		
-		targetDate = new JLabel("이번 달");
-		targetDate.setFont(new Font("D2", Font.BOLD, 15));
-		targetDate.setHorizontalAlignment(SwingConstants.CENTER);
-		targetDate.setBounds(399, 12, 179, 29);
-		add(targetDate);
 		
 		btn_prev = new JButton("");
 		btn_prev.setIcon(new ImageIcon("C:\\Users\\whcks\\Desktop\\eclipse\\workspace\\Qqqq\\src\\images\\leftArrow.png"));

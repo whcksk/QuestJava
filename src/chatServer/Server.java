@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Scanner;
 
 import chatServer.control.ChatController;
 import chatServer.model.ChatModel;
@@ -16,7 +17,7 @@ public class Server {
 		ChatModel model = new ChatModel();
 		ChatController control = new ChatController(model);
 		ServerSocket serverSocket;
-		
+
 		try {
 			serverSocket = new ServerSocket(8080);
 			System.out.println("서버 시작");
@@ -54,6 +55,7 @@ class ChattingServer extends Thread {
 		try {
 			// 일단 쌓인 메시지데이터들 다 보내주자.
 			// 첫번째로 받는 것은 userid
+
 			String id = in.readUTF();
 			String opp = in.readUTF();
 			
@@ -70,6 +72,7 @@ class ChattingServer extends Thread {
 			}
 			
 			// 채팅 시작.  중간자역할
+
 			// 상대방에게 보내는 out 스트림 생성
 			while (true) {
 				Socket otherSocket = null;
@@ -77,6 +80,7 @@ class ChattingServer extends Thread {
 				String message = in.readUTF();
 				System.out.println("server check : " + message);
 				// 접속중이 아니라면
+
 				if(control.getSocket(opp) == null) {
 					System.out.println("접속중 아니다");
 					control.saveMsg(opp, id, message);
