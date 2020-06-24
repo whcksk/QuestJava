@@ -15,13 +15,17 @@ public class ChatController {
 		this.model = model;
 	}
 	
-	public void addSocket(int id, Socket socket) {
+
+	public void addSocket(String id, Socket socket) {
+
 		model.socket.put(id, socket);
 	}
 	
 	//getSocket으로 null이면 현재 접속해 있지 않다는 얘기
 	//메시지 쌓아줘야한다. (saveMsg)
-	public Socket getSocket(int id) {
+
+	public Socket getSocket(String id) {
+
 		if(!model.socket.containsKey(id)) {
 			return null;
 		}
@@ -29,11 +33,13 @@ public class ChatController {
 	}
 	
 	
-	public int[] recvId(int receiver) {
-		int[] senders;
+
+	public String[] recvId(String receiver) {
+		String[] senders;
 		if (model.recv_send.containsKey(receiver)) {
-			senders = new int[model.recv_send.size()];
-			Iterator<Integer> iter = model.recv_send.get(receiver).keySet().iterator();
+			senders = new String[model.recv_send.size()];
+			Iterator<String> iter = model.recv_send.get(receiver).keySet().iterator();
+
 			for (int i = 0; iter.hasNext(); i++) {
 				senders[i] = iter.next();
 			}
@@ -43,20 +49,25 @@ public class ChatController {
 	}
 
 	// 접속 후 보낸이에게 쌓인 메시지 받기
-	public String[] recvMsg(int receiver, int sender) {
-		Queue<String> queue = model.recv_send.get(receiver).get(sender);
-		String[] msg = new String[queue.size()];
-		for (int i = 0; !queue.isEmpty(); i++) {
-			msg[i] = queue.remove();
+
+	public String[] recvMsg(String receiver, String sender) {
+		try {
+			Queue<String> queue = model.recv_send.get(receiver).get(sender);
+			String[] msg = new String[queue.size()];
+			for (int i = 0; !queue.isEmpty(); i++) {
+				msg[i] = queue.remove();
+			}
+			return msg;
+		} catch (Exception e) {
+			return null;
 		}
-		return msg;
 	}
 
 	// 서버가 리시버id에 샌더 id와 함께 메시지 저장
-	public void saveMsg(int receiver, int sender, String message) {
+	public void saveMsg(String receiver, String sender, String message) {
 		// 처음
 		if (!model.recv_send.containsKey(receiver)) {
-			model.recv_send.computeIfAbsent(receiver, k -> new HashMap<Integer, Queue<String>>());
+			model.recv_send.computeIfAbsent(receiver, k -> new HashMap<String, Queue<String>>());
 			model.recv_send.get(receiver).computeIfAbsent(sender, k -> new LinkedList<String>());
 		} else {
 			// 첫 상대

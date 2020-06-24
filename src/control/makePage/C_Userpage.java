@@ -62,18 +62,15 @@ public class C_Userpage extends C_Panel{
 				}
 			} 
 		});
-		
-		if(control.me.getId().equals(user.getId())) {
-			panel.chat.setVisible(false);
-		}
-		
+
 		panel.chat.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ChatFrame chatframe = new ChatFrame();
 				chatframe.createGui();
-				new C_ChatFrame().set(chatframe, control);
-				new Client().run(control.me.getId(), user.getId());
+
+				new C_ChatFrame(chatframe, control.me.getId(), user.getId()).set(chatframe, control);
+
 			}
 		});
 		

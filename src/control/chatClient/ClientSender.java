@@ -7,7 +7,8 @@ import java.util.Scanner;
 
 import view.ChatFrame;
 
-class ClientSender extends Thread {
+public class ClientSender {
+
 	ChatFrame view;
 	Socket socket;
 	String me;
@@ -27,15 +28,25 @@ class ClientSender extends Thread {
 		}
 	}
 
-	public void run() {
+	public void start() {
 		try {
 			out.writeUTF(me);
 			out.writeUTF(oppenent);
-			while (true) {
-				String msg = view.msg.getText();
-				view.msg.setText("");
-				out.writeUTF(msg);
-			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run() {
+		try {
+			String message = view.msg.getText();
+			view.msg.setText("");
+			Object[] data = { "", message };
+			view.model.addRow(data);
+			message = me + ": " + message;
+			String msgtoSever = message;
+			out.writeUTF(msgtoSever);
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

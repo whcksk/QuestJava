@@ -15,10 +15,10 @@ public class App {
 	
 	App() {
 		control.createUser("1", "1", "1");
-		control.createUser("2", "1", "1");
-		control.createUser("3", "1", "1");
-		control.createUser("4", "1", "1");
-		control.createUser("5", "1", "1");
+		control.createUser("2", "2", "2");
+		control.createUser("3", "3", "3");
+		control.createUser("4", "4", "4");
+		control.createUser("5", "5", "5");
 		
 		control.writePost("1", false, "title1", "no content");
 		control.writePost("2", false, "title2", "2");
